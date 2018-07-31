@@ -41,43 +41,54 @@ function putAuthor(bId, aId, newAuthor) {
     }
 
     let author = book.author.find(a => a.id == aId)
-    console.log('AUTHOR IS: ', author)
+    console.log('CURRENT AUTHOR IS: ', author)
+    console.log('New Author is: ', newAuthor.author.fName)
 
 
-    if (!newAuthor.fName || !newAuthor.lName) {
+    if (!newAuthor.author.fName || !newAuthor.author.lName) {
+      console.log('IN NEWAUTHOR ERROR')
       err.status = 400
       err.errors = 'First and Last name required'
       return err
     } else {
-      author.fName = newAuthor.fName
-      author.lName = newAuthor.lName
+      author.fName = newAuthor.author.fName
+      author.lName = newAuthor.author.lName
     }
+    console.log(author)
     return author
 }
 
 
 
 function postAuthor(bookId, author) {
-  let book = Books.find(b => b.id == bookId)
-  console.log('AUTHOR---LOOKING/FOUND BOOK: ', book)
+  let book = books.find(b => b.id == bookId)
+  console.log('POST--AUTHOR---LOOKING/FOUND BOOK: ', book)
   if(!book || book==undefined) {
+    console.log("In book not defined")
     err.status = 404
     err.errors = 'Book not found, invalid ID'
     return err
-  } else if (!author.fName || !author.lName) {
+  } 
+  
+  if (!author.fName || !author.lName) {
+    console.log("IN NO F/L NAMES", author)
     err.status = 400
     err.errors = 'First and Last name required'
     return err
   }
-    book.authors.post(author)
-    book.authors.forEach(a => a.id = shortID.generate())
+  
+    console.log("ABOUT TO TRY TO POST AUTHOR", author)
+    book.author.push(author)
+    console.log(book)
+
+    book.author.forEach(a => a.id = shortID.generate())
     return author
 }
 
 
 function getAuthors(id) {
   let book = books.find(b => b.id == id)
-  console.log('AUTHOR---LOOKING/FOUND BOOK: ', book)
+  console.log('GET-- AUTHOR---LOOKING/FOUND BOOK: ', book)
   if(!book || book==undefined) {
     err.status = 404
     err.errors = 'Book not found, invalid ID'
@@ -99,9 +110,9 @@ function getAuthor(bId, aId) {
   } else {
     console.log('author id: ', aId)
     console.log('AUTHORS IS:', Authors)
-  let author = Authors.find(a => a.id == aId)
+    let author = Authors.find(a => a.id == aId)
 
-  console.log('LOOKING/FOUND AUTHOR: ', author)
+    console.log('LOOKING/FOUND AUTHOR: ', author)
     response = author
   }
   return response
@@ -112,4 +123,4 @@ function getAuthor(bId, aId) {
 
 
 
-module.exports = { postAuthor, getAuthors, getAuthor, putAuthor,postAuthor, deleteAuthor }
+module.exports = { getAuthors, getAuthor, putAuthor,postAuthor, deleteAuthor }

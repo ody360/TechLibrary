@@ -1,6 +1,6 @@
 const shortID = require('short-id')
-const authors = require('./authorModel.js').postAuthor
-var books = require('./data.js').Books
+const postAuthor = require('./authorModel').postAuthor
+var books = require('./data').Books
 
 function getBooks(limit) {
   return limit ? books.slice(0, limit) : books
@@ -98,20 +98,27 @@ function putBook(id, body) {
     }
 
     console.log('About to check borrowed')
-    if(borrowed !== true && borrowed !== false) {
-      console.log('INSIDE BORROWED CHECK')
-      err.status = 400
-      err.errors = 'Borrowed must be true or false'
-      return err
+    if(borrowed !== undefined) {
+      console.log('BORROWED WAS:', borrowed)
+      if(borrowed !== true && borrowed !== false) {
+        console.log('INSIDE BORROWED ERROR')
+        err.status = 400
+        err.errors = 'Borrowed must be true or false'
+        return err
+      }
+      book.borrowed = borrowed
     }
     
-    book.borrowed = borrowed
+    
     
     if(desc != '') {
       book.desc = desc
     }
-    if(author) {
-      book.authors.push(author)
+
+    console.log("Author is: ", author, book.author)
+    if(author !== undefined) {
+      console.log("IN POSTAUTHOR OF PUT BOOK")
+      postAuthor(id,author)
 
     }
     return book

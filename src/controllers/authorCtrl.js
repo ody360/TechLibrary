@@ -27,8 +27,8 @@ function putAuthor(req, res, next) {
 
 function deleteAuthor(req, res, next) {
   const data = Author.deleteAuthor(req.params.id, req.params.aId)
-  console.log('DELET DATA: ', data)
-  res.status(204).json(data)
+  console.log('DELETE DATA: ', data)
+  res.status(202).json(data)
 }
 
 module.exports = {getAuthors, getAuthor, postAuthor, putAuthor, deleteAuthor}
